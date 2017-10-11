@@ -179,7 +179,7 @@ module RubyAsterisk
                   if action_value.split(",")[index] == 'newcat'
                     action_hash = {"Action-#{a_num}" => action_value.split(",")[index]}
                     cat_hash = {"Cat-#{cat_action_num.split(",")[index]}" => cat_action_value.split(",")[index]}
-                    newcat = action_hash.merge(cat_hash).merge(match_hash)
+                    newcat = action_hash.merge(cat_hash)
                   elsif action_value.split(",")[index] == 'append'
                     action_hash = {"Action-#{a_num}" => action_value.split(",")[index]}
                     cat_hash = {"Cat-#{cat_action_num.split(",")[index]}" => cat_action_value.split(",")[index]}
