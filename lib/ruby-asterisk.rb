@@ -176,19 +176,19 @@ module RubyAsterisk
       queny = { "srcfilename" => srcfilename, "dstfilename" => dstfilename, "reload" => reload }
       newcat, append = [], []
       action_num.split(";").each_with_index do |a_num, index|
-      if action_value.split(";")[index] == 'newcat'
-        action_hash = {"Action-#{a_num}" => action_value.split(";")[index]}
-        cat_hash = {"Cat-#{cat_action_num.split(";")[index]}" => cat_action_value.split(";")[index]}
-        newcat << action_hash.merge(cat_hash)
-      elsif action_value.split(";")[index] == 'append'
-        action_hash = {"Action-#{a_num}" => action_value.split(";")[index]}
-        cat_hash = {"Cat-#{cat_action_num.split(";")[index]}" => cat_action_value.split(";")[index]}
-        var_hash = {"Var-#{var_action_num.split(";")[index]}" => var_action_value.split(";")[index]}
-        value_hash = {"Value-#{value_action_num.split(";")[index]}" => value_action_value.split(";")[index]}
-        match_hash = {"Match-#{match_num.split(";")[index]}" => match_value.split(";")[index]}
-        append << action_hash.merge(cat_hash).merge(var_hash).merge(value_hash).merge(match_hash)
+        if action_value.split(";")[index] == 'newcat'
+          action_hash = {"Action-#{a_num}" => action_value.split(";")[index]}
+          cat_hash = {"Cat-#{cat_action_num.split(";")[index]}" => cat_action_value.split(";")[index]}
+          newcat << action_hash.merge(cat_hash)
+        elsif action_value.split(";")[index] == 'append'
+          action_hash = {"Action-#{a_num}" => action_value.split(";")[index]}
+          cat_hash = {"Cat-#{cat_action_num.split(";")[index]}" => cat_action_value.split(";")[index]}
+          var_hash = {"Var-#{var_action_num.split(";")[index]}" => var_action_value.split(";")[index]}
+          value_hash = {"Value-#{value_action_num.split(";")[index]}" => value_action_value.split(";")[index]}
+          match_hash = {"Match-#{match_num.split(";")[index]}" => match_value.split(";")[index]}
+          append << action_hash.merge(cat_hash).merge(var_hash).merge(value_hash).merge(match_hash)
+        end
       end
-    end
       params = newcat.first.merge(append.first)
       execute 'UpdateConfig', queny.merge(params)
     end
