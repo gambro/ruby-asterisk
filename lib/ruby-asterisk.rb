@@ -167,6 +167,10 @@ module RubyAsterisk
       execute 'SIPpeers'
     end
 
+    def play_dtmf(channel, dtmf)
+      execute 'PlayDTMF', {'Channel' => channel, 'Digit' => dtmf}
+    end
+
     def get_config(filename)
       execute 'GetConfig', {'Filename' => filename}
     end
