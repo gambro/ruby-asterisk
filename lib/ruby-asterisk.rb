@@ -197,6 +197,14 @@ module RubyAsterisk
       execute 'UpdateConfig', queny.merge(params)
     end
 
+    def monitor(channel, save_format = 'wav', mix = '1')
+      execute 'Monitor', {'Channel' => channel, 'Format' => save_format, 'Mix' => mix}
+    end
+
+    def stop_monitor(channel)
+      execute 'StopMonitor', {'Channel' => channel}
+    end
+
     private
     def execute(command, options = {})
       request = Request.new(command, options)
