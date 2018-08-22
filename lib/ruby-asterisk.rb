@@ -167,6 +167,10 @@ module RubyAsterisk
       execute 'SIPpeers'
     end
 
+    def play_dtmf(channel, dtmf)
+      execute 'PlayDTMF', {'Channel' => channel, 'Digit' => dtmf}
+    end
+
     def get_config(filename)
       execute 'GetConfig', {'Filename' => filename}
     end
@@ -174,25 +178,32 @@ module RubyAsterisk
     # action_num: *args1, action_value: *args12, cat_action_num: *args2, cat_action_value: *args21, var_action_num: *args3, var_action_value: *args31, value_action_num: *args4, value_action_value: *args41, match_num: *args5, match_value: *args51
     def update_config( action_num:, action_value:, cat_action_num:, cat_action_value:, var_action_num:, var_action_value:, value_action_num:, value_action_value:, match_num:, match_value:,  reload: 'true', srcfilename:, dstfilename:)
       queny = { "srcfilename" => srcfilename, "dstfilename" => dstfilename, "reload" => reload }
-      newcat, append = [], []
+      newcat, append = {}, {}
       action_num.split(";").each_with_index do |a_num, index|
-        if action_value.split(";")[index] == 'newcat'
+        case action_value.split(";")[index]
+        when 'newcat', 'delcat'
           action_hash = {"Action-#{a_num}" => action_value.split(";")[index]}
           cat_hash = {"Cat-#{cat_action_num.split(";")[index]}" => cat_action_value.split(";")[index]}
-          match_hash = {"Match-#{match_num.split(";")[index]}" => match_value.split(";")[index]}
-          newcat << action_hash.merge(cat_hash).merge(match_hash)
-        elsif action_value.split(";")[index] == 'append'
+          newcat.merge!(action_hash).merge!(cat_hash)
+        when 'append', 'update', 'delete'
           action_hash = {"Action-#{a_num}" => action_value.split(";")[index]}
           cat_hash = {"Cat-#{cat_action_num.split(";")[index]}" => cat_action_value.split(";")[index]}
           var_hash = {"Var-#{var_action_num.split(";")[index]}" => var_action_value.split(";")[index]}
           value_hash = {"Value-#{value_action_num.split(";")[index]}" => value_action_value.split(";")[index]}
           match_hash = {"Match-#{match_num.split(";")[index]}" => match_value.split(";")[index]}
-          append << action_hash.merge(cat_hash).merge(var_hash).merge(value_hash).merge(match_hash)
+          append.merge!(action_hash).merge!(cat_hash).merge!(var_hash).merge!(value_hash).merge!(match_hash)
         end
-
       end
-      newcat.first.merge(append.first)
+      params = newcat.merge(append)
       execute 'UpdateConfig', queny.merge(params)
+    end
+
+    def monitor(channel, save_format = 'wav', mix = '1')
+      execute 'Monitor', {'Channel' => channel, 'Format' => save_format, 'Mix' => mix}
+    end
+
+    def stop_monitor(channel)
+      execute 'StopMonitor', {'Channel' => channel}
     end
 
     private
